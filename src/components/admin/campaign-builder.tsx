@@ -2,13 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { Loader2, Send, Save, Eye } from "lucide-react";
 
@@ -22,32 +15,32 @@ const defaultHtml = `<!DOCTYPE html>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{subject}}</title>
 </head>
-<body style="margin:0;padding:0;background:#f4f4f5;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:40px 20px;">
+<body style="margin:0;padding:0;background:#f5f5f7;font-family:-apple-system,BlinkMacSystemFont,'DM Sans','Segoe UI',sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f7;padding:40px 20px;">
     <tr>
       <td align="center">
-        <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;max-width:600px;width:100%;">
+        <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;max-width:600px;width:100%;">
           <tr>
-            <td style="background:#1e40af;padding:32px 40px;">
-              <h1 style="margin:0;color:#ffffff;font-size:24px;font-weight:700;">{{company_name}}</h1>
+            <td style="background:#0071e3;padding:32px 40px;">
+              <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:600;letter-spacing:-0.3px;">{{company_name}}</h1>
             </td>
           </tr>
           <tr>
             <td style="padding:40px;">
-              <h2 style="margin:0 0 16px;color:#111827;font-size:20px;">Hello {{first_name}},</h2>
-              <p style="margin:0 0 20px;color:#374151;line-height:1.6;">
+              <h2 style="margin:0 0 16px;color:#1d1d1f;font-size:20px;font-weight:600;">Hello {{first_name}},</h2>
+              <p style="margin:0 0 24px;color:#424245;line-height:1.7;font-size:15px;">
                 Write your message here. You can use merge tags like {{first_name}}, {{last_name}}, and {{email}}.
               </p>
-              <a href="{{cta_link}}" style="display:inline-block;background:#1e40af;color:#ffffff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:14px;">
+              <a href="{{cta_link}}" style="display:inline-block;background:#0071e3;color:#ffffff;padding:12px 28px;border-radius:980px;text-decoration:none;font-weight:600;font-size:14px;">
                 {{cta_text}}
               </a>
             </td>
           </tr>
           <tr>
-            <td style="background:#f9fafb;padding:24px 40px;border-top:1px solid #e5e7eb;">
-              <p style="margin:0;color:#6b7280;font-size:12px;text-align:center;">
+            <td style="background:#f5f5f7;padding:24px 40px;border-top:1px solid #d2d2d7;">
+              <p style="margin:0;color:#86868b;font-size:12px;text-align:center;">
                 You received this email because you are subscribed to our list.<br>
-                <a href="{{unsubscribe_url}}" style="color:#6b7280;">Unsubscribe</a>
+                <a href="{{unsubscribe_url}}" style="color:#86868b;">Unsubscribe</a>
               </p>
             </td>
           </tr>
@@ -63,6 +56,7 @@ export function CampaignBuilder({ organizations }: { organizations: Org[] }) {
   const [loading, setLoading] = useState(false);
   const [lists, setLists] = useState<List[]>([]);
   const [previewMode, setPreviewMode] = useState(false);
+  const [activeTab, setActiveTab] = useState<"html" | "text">("html");
 
   const [form, setForm] = useState({
     name: "",
@@ -80,6 +74,8 @@ export function CampaignBuilder({ organizations }: { organizations: Org[] }) {
   function update(field: string, value: string) {
     setForm((p) => ({ ...p, [field]: value }));
   }
+
+  const inputClass = "w-full h-11 px-4 rounded-xl border border-[#d2d2d7] bg-[#f5f5f7] text-[#1d1d1f] text-sm placeholder:text-[#86868b] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40 focus:border-[#0071e3] transition-all";
 
   useEffect(() => {
     if (!form.organizationId) { setLists([]); return; }
@@ -113,97 +109,87 @@ export function CampaignBuilder({ organizations }: { organizations: Org[] }) {
     <div className="space-y-6">
       <div className="grid grid-cols-3 gap-6">
         <div className="col-span-2 space-y-6">
-          <Card className="bg-slate-800 border-slate-700">
-            <CardHeader>
-              <CardTitle className="text-white text-base">Campaign Settings</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+          <div className="bg-white rounded-2xl border border-[#d2d2d7]/40 shadow-sm">
+            <div className="px-6 py-4 border-b border-[#d2d2d7]/40">
+              <h3 className="text-[15px] font-semibold text-[#1d1d1f]">Campaign Settings</h3>
+            </div>
+            <div className="p-6 space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-slate-300">Campaign Name *</Label>
-                  <Input value={form.name} onChange={(e) => update("name", e.target.value)}
-                    placeholder="Summer Sale 2025" className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-500" required />
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-[#1d1d1f]">Campaign Name *</label>
+                  <input value={form.name} onChange={(e) => update("name", e.target.value)}
+                    placeholder="Summer Sale 2025" className={inputClass} required />
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-slate-300">Organization *</Label>
-                  <Select value={form.organizationId} onValueChange={(v) => v && update("organizationId", v)}>
-                    <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                      <SelectValue placeholder="Select organization" />
-                    </SelectTrigger>
-                    <SelectContent className="bg-slate-800 border-slate-700">
-                      {organizations.map((o) => (
-                        <SelectItem key={o.id} value={o.id}>{o.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-[#1d1d1f]">Organization *</label>
+                  <select value={form.organizationId} onChange={(e) => update("organizationId", e.target.value)} className={inputClass}>
+                    <option value="">Select organization</option>
+                    {organizations.map((o) => (
+                      <option key={o.id} value={o.id}>{o.name}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-slate-300">Subject Line *</Label>
-                <Input value={form.subject} onChange={(e) => update("subject", e.target.value)}
-                  placeholder="Your exclusive offer is waiting..." className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-500" required />
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-[#1d1d1f]">Subject Line *</label>
+                <input value={form.subject} onChange={(e) => update("subject", e.target.value)}
+                  placeholder="Your exclusive offer is waiting..." className={inputClass} required />
               </div>
 
-              <div className="space-y-2">
-                <Label className="text-slate-300">Preview Text</Label>
-                <Input value={form.previewText} onChange={(e) => update("previewText", e.target.value)}
-                  placeholder="Short text shown in inbox previews..." className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-500" />
+              <div className="space-y-1.5">
+                <label className="text-sm font-medium text-[#1d1d1f]">Preview Text</label>
+                <input value={form.previewText} onChange={(e) => update("previewText", e.target.value)}
+                  placeholder="Short text shown in inbox previews..." className={inputClass} />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-slate-300">From Name *</Label>
-                  <Input value={form.fromName} onChange={(e) => update("fromName", e.target.value)}
-                    placeholder="Acme Marketing" className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-500" required />
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-[#1d1d1f]">From Name *</label>
+                  <input value={form.fromName} onChange={(e) => update("fromName", e.target.value)}
+                    placeholder="Acme Marketing" className={inputClass} required />
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-slate-300">From Email *</Label>
-                  <Input type="email" value={form.fromEmail} onChange={(e) => update("fromEmail", e.target.value)}
-                    placeholder="hello@acme.com" className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-500" required />
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-[#1d1d1f]">From Email *</label>
+                  <input type="email" value={form.fromEmail} onChange={(e) => update("fromEmail", e.target.value)}
+                    placeholder="hello@acme.com" className={inputClass} required />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label className="text-slate-300">Reply-To</Label>
-                  <Input type="email" value={form.replyTo} onChange={(e) => update("replyTo", e.target.value)}
-                    placeholder="support@acme.com" className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-500" />
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-[#1d1d1f]">Reply-To</label>
+                  <input type="email" value={form.replyTo} onChange={(e) => update("replyTo", e.target.value)}
+                    placeholder="support@acme.com" className={inputClass} />
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-slate-300">Contact List</Label>
-                  <Select value={form.listId} onValueChange={(v) => v && update("listId", v)} disabled={!form.organizationId}>
-                    <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
-                      <SelectValue placeholder={form.organizationId ? "Select list" : "Select org first"} />
-                    </SelectTrigger>
-                    <SelectContent className="bg-slate-800 border-slate-700">
-                      {lists.map((l) => (
-                        <SelectItem key={l.id} value={l.id}>{l.name}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                <div className="space-y-1.5">
+                  <label className="text-sm font-medium text-[#1d1d1f]">Contact List</label>
+                  <select value={form.listId} onChange={(e) => update("listId", e.target.value)} disabled={!form.organizationId} className={inputClass}>
+                    <option value="">{form.organizationId ? "Select list" : "Select org first"}</option>
+                    {lists.map((l) => (
+                      <option key={l.id} value={l.id}>{l.name}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card className="bg-slate-800 border-slate-700">
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-white text-base">Email Content</CardTitle>
-              <Button
+          <div className="bg-white rounded-2xl border border-[#d2d2d7]/40 shadow-sm">
+            <div className="px-6 py-4 border-b border-[#d2d2d7]/40 flex items-center justify-between">
+              <h3 className="text-[15px] font-semibold text-[#1d1d1f]">Email Content</h3>
+              <button
                 type="button"
-                variant="ghost"
-                size="sm"
                 onClick={() => setPreviewMode(!previewMode)}
-                className="text-slate-400 hover:text-white gap-2"
+                className="inline-flex items-center gap-1.5 text-sm text-[#0071e3] font-medium hover:underline"
               >
                 <Eye className="w-4 h-4" />
                 {previewMode ? "Edit" : "Preview"}
-              </Button>
-            </CardHeader>
-            <CardContent>
+              </button>
+            </div>
+            <div className="p-6">
               {previewMode ? (
-                <div className="border border-slate-600 rounded-lg overflow-hidden h-96">
+                <div className="border border-[#d2d2d7] rounded-xl overflow-hidden h-96">
                   <iframe
                     srcDoc={form.htmlContent}
                     className="w-full h-full"
@@ -212,68 +198,78 @@ export function CampaignBuilder({ organizations }: { organizations: Org[] }) {
                   />
                 </div>
               ) : (
-                <Tabs defaultValue="html">
-                  <TabsList className="bg-slate-700 border-slate-600 mb-4">
-                    <TabsTrigger value="html" className="data-[state=active]:bg-slate-600 text-slate-300">HTML</TabsTrigger>
-                    <TabsTrigger value="text" className="data-[state=active]:bg-slate-600 text-slate-300">Plain Text</TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="html">
-                    <Textarea
-                      value={form.htmlContent}
-                      onChange={(e) => update("htmlContent", e.target.value)}
-                      className="bg-slate-700 border-slate-600 text-white font-mono text-xs min-h-96 resize-y"
-                      placeholder="HTML email content..."
-                    />
-                    <p className="text-slate-500 text-xs mt-2">
-                      Merge tags: {"{{first_name}}"}, {"{{last_name}}"}, {"{{email}}"}, {"{{unsubscribe_url}}"}
-                    </p>
-                  </TabsContent>
-                  <TabsContent value="text">
-                    <Textarea
+                <div>
+                  <div className="flex gap-1 mb-4 bg-[#f5f5f7] rounded-lg p-1 w-fit">
+                    <button
+                      onClick={() => setActiveTab("html")}
+                      className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeTab === "html" ? "bg-white text-[#1d1d1f] shadow-sm" : "text-[#86868b]"}`}
+                    >
+                      HTML
+                    </button>
+                    <button
+                      onClick={() => setActiveTab("text")}
+                      className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${activeTab === "text" ? "bg-white text-[#1d1d1f] shadow-sm" : "text-[#86868b]"}`}
+                    >
+                      Plain Text
+                    </button>
+                  </div>
+                  {activeTab === "html" ? (
+                    <>
+                      <textarea
+                        value={form.htmlContent}
+                        onChange={(e) => update("htmlContent", e.target.value)}
+                        className="w-full min-h-96 px-4 py-3 rounded-xl border border-[#d2d2d7] bg-[#f5f5f7] text-[#1d1d1f] font-mono text-xs resize-y focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40 focus:border-[#0071e3] transition-all"
+                        placeholder="HTML email content..."
+                      />
+                      <p className="text-[#86868b] text-xs mt-2">
+                        Merge tags: {"{{first_name}}"}, {"{{last_name}}"}, {"{{email}}"}, {"{{unsubscribe_url}}"}
+                      </p>
+                    </>
+                  ) : (
+                    <textarea
                       value={form.textContent}
                       onChange={(e) => update("textContent", e.target.value)}
-                      className="bg-slate-700 border-slate-600 text-white min-h-64 resize-y"
+                      className="w-full min-h-64 px-4 py-3 rounded-xl border border-[#d2d2d7] bg-[#f5f5f7] text-[#1d1d1f] text-sm resize-y focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40 focus:border-[#0071e3] transition-all"
                       placeholder="Plain text fallback version of your email..."
                     />
-                  </TabsContent>
-                </Tabs>
+                  )}
+                </div>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
 
         <div className="space-y-4">
-          <Card className="bg-slate-800 border-slate-700 sticky top-8">
-            <CardHeader>
-              <CardTitle className="text-white text-base">Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <Button
+          <div className="bg-white rounded-2xl border border-[#d2d2d7]/40 shadow-sm sticky top-8">
+            <div className="px-6 py-4 border-b border-[#d2d2d7]/40">
+              <h3 className="text-[15px] font-semibold text-[#1d1d1f]">Actions</h3>
+            </div>
+            <div className="p-6 space-y-3">
+              <button
                 onClick={() => save(true)}
-                className="w-full bg-blue-600 hover:bg-blue-500 gap-2"
+                className="w-full h-11 rounded-xl bg-[#0071e3] text-white text-sm font-medium hover:bg-[#0077ed] active:scale-[0.98] transition-all disabled:opacity-50 shadow-sm inline-flex items-center justify-center gap-2"
                 disabled={loading || !form.name || !form.subject || !form.organizationId || !form.fromName || !form.fromEmail}
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 Send Now
-              </Button>
-              <Button
+              </button>
+              <button
                 onClick={() => save(false)}
-                variant="outline"
-                className="w-full border-slate-600 text-slate-300 hover:text-white gap-2"
+                className="w-full h-11 rounded-xl border border-[#d2d2d7] text-[#424245] text-sm font-medium hover:bg-[#f5f5f7] transition-all inline-flex items-center justify-center gap-2"
                 disabled={loading}
               >
                 <Save className="w-4 h-4" />
                 Save Draft
-              </Button>
-            </CardContent>
-          </Card>
+              </button>
+            </div>
+          </div>
 
-          <Card className="bg-slate-800 border-slate-700">
-            <CardHeader>
-              <CardTitle className="text-white text-base">Merge Tags</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-1.5 text-xs">
+          <div className="bg-white rounded-2xl border border-[#d2d2d7]/40 shadow-sm">
+            <div className="px-6 py-4 border-b border-[#d2d2d7]/40">
+              <h3 className="text-[15px] font-semibold text-[#1d1d1f]">Merge Tags</h3>
+            </div>
+            <div className="p-6">
+              <div className="space-y-2.5 text-xs">
                 {[
                   ["{{first_name}}", "Contact first name"],
                   ["{{last_name}}", "Contact last name"],
@@ -282,13 +278,13 @@ export function CampaignBuilder({ organizations }: { organizations: Org[] }) {
                   ["{{unsubscribe_url}}", "Unsubscribe link"],
                 ].map(([tag, desc]) => (
                   <div key={tag} className="flex items-center justify-between">
-                    <code className="text-blue-400 font-mono">{tag}</code>
-                    <span className="text-slate-500">{desc}</span>
+                    <code className="text-[#0071e3] font-mono bg-[#0071e3]/5 px-2 py-0.5 rounded">{tag}</code>
+                    <span className="text-[#86868b]">{desc}</span>
                   </div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -2,12 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Loader2, Zap } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -37,82 +33,82 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-6">
-        <div className="flex flex-col items-center gap-2 text-white">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center">
-              <Zap className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-2xl font-bold tracking-tight">Nexus</span>
-          </div>
-          <p className="text-slate-400 text-sm">CRM · HRMS · Marketing Platform</p>
+    <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center p-4">
+      <div className="w-full max-w-sm space-y-8">
+        <div className="flex flex-col items-center gap-3">
+          <span className="text-[28px] font-semibold tracking-tight text-[#1d1d1f]">
+            SymanticOps
+          </span>
+          <p className="text-[#86868b] text-sm font-normal">CRM · HRMS · Marketing Platform</p>
         </div>
 
-        <Card className="border-slate-700 bg-slate-800/50 backdrop-blur text-white">
-          <CardHeader>
-            <CardTitle className="text-xl">Create your account</CardTitle>
-            <CardDescription className="text-slate-400">Get started with your organization</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="orgName" className="text-slate-300">Organization Name</Label>
-                <Input
-                  id="orgName"
-                  placeholder="Acme Corp"
-                  value={form.orgName}
-                  onChange={(e) => setForm((p) => ({ ...p, orgName: e.target.value }))}
-                  className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-slate-300">Your Name</Label>
-                <Input
-                  id="name"
-                  placeholder="Jane Smith"
-                  value={form.name}
-                  onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
-                  className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-slate-300">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="you@company.com"
-                  value={form.email}
-                  onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
-                  className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-slate-300">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Min 8 characters"
-                  value={form.password}
-                  onChange={(e) => setForm((p) => ({ ...p, password: e.target.value }))}
-                  className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
-                  minLength={8}
-                  required
-                />
-              </div>
-              <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-500" disabled={loading}>
-                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Create Account"}
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+        <div className="bg-white rounded-2xl shadow-sm border border-[#d2d2d7]/60 p-8">
+          <div className="space-y-1 mb-6">
+            <h2 className="text-xl font-semibold text-[#1d1d1f]">Create your account</h2>
+            <p className="text-[#86868b] text-sm">Get started with your organization</p>
+          </div>
 
-        <p className="text-center text-slate-500 text-sm">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="space-y-1.5">
+              <label htmlFor="orgName" className="text-sm font-medium text-[#1d1d1f]">Organization Name</label>
+              <input
+                id="orgName"
+                placeholder="Acme Corp"
+                value={form.orgName}
+                onChange={(e) => setForm((p) => ({ ...p, orgName: e.target.value }))}
+                className="w-full h-11 px-4 rounded-xl border border-[#d2d2d7] bg-[#f5f5f7] text-[#1d1d1f] text-sm placeholder:text-[#86868b] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40 focus:border-[#0071e3] transition-all"
+                required
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="name" className="text-sm font-medium text-[#1d1d1f]">Your Name</label>
+              <input
+                id="name"
+                placeholder="Jane Smith"
+                value={form.name}
+                onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
+                className="w-full h-11 px-4 rounded-xl border border-[#d2d2d7] bg-[#f5f5f7] text-[#1d1d1f] text-sm placeholder:text-[#86868b] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40 focus:border-[#0071e3] transition-all"
+                required
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="email" className="text-sm font-medium text-[#1d1d1f]">Email</label>
+              <input
+                id="email"
+                type="email"
+                placeholder="you@company.com"
+                value={form.email}
+                onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
+                className="w-full h-11 px-4 rounded-xl border border-[#d2d2d7] bg-[#f5f5f7] text-[#1d1d1f] text-sm placeholder:text-[#86868b] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40 focus:border-[#0071e3] transition-all"
+                required
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label htmlFor="password" className="text-sm font-medium text-[#1d1d1f]">Password</label>
+              <input
+                id="password"
+                type="password"
+                placeholder="Min 8 characters"
+                value={form.password}
+                onChange={(e) => setForm((p) => ({ ...p, password: e.target.value }))}
+                className="w-full h-11 px-4 rounded-xl border border-[#d2d2d7] bg-[#f5f5f7] text-[#1d1d1f] text-sm placeholder:text-[#86868b] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/40 focus:border-[#0071e3] transition-all"
+                minLength={8}
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full h-11 rounded-xl bg-[#0071e3] text-white text-sm font-medium hover:bg-[#0077ed] active:scale-[0.98] transition-all disabled:opacity-50"
+            >
+              {loading ? <Loader2 className="w-4 h-4 animate-spin mx-auto" /> : "Create Account"}
+            </button>
+          </form>
+        </div>
+
+        <p className="text-center text-[#86868b] text-sm">
           Already have an account?{" "}
-          <a href="/login" className="text-blue-400 hover:underline">
+          <a href="/login" className="text-[#0071e3] hover:underline">
             Sign in
           </a>
         </p>

@@ -10,7 +10,7 @@ const adapter = new PrismaPg({ connectionString: url });
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  const existing = await prisma.user.findUnique({ where: { email: "admin@nexus.dev" } });
+  const existing = await prisma.user.findUnique({ where: { email: "admin@symanticops.dev" } });
   if (existing) {
     console.log("Super admin already exists");
     return;
@@ -21,14 +21,14 @@ async function main() {
   await prisma.user.create({
     data: {
       name: "Super Admin",
-      email: "admin@nexus.dev",
+      email: "admin@symanticops.dev",
       passwordHash,
       role: "SUPER_ADMIN",
       isActive: true,
     },
   });
 
-  console.log("✅ Super admin created: admin@nexus.dev / Admin@1234");
+  console.log("✅ Super admin created: admin@symanticops.dev / Admin@1234");
 }
 
 main()

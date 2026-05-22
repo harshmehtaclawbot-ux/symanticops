@@ -1,6 +1,4 @@
 import { prisma } from "@/lib/prisma";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { Plus, Building2 } from "lucide-react";
 
@@ -16,71 +14,67 @@ export default async function CustomersPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Customers</h1>
-          <p className="text-slate-400 mt-1">{orgs.length} organizations</p>
+          <h1 className="text-[28px] font-semibold tracking-tight text-[#1d1d1f]">Customers</h1>
+          <p className="text-[#86868b] text-sm mt-1">{orgs.length} organizations</p>
         </div>
-        <Link href="/admin/customers/new">
-          <Button className="bg-blue-600 hover:bg-blue-500 gap-2">
-            <Plus className="w-4 h-4" /> Add Customer
-          </Button>
+        <Link
+          href="/admin/customers/new"
+          className="inline-flex items-center gap-2 h-10 px-5 rounded-xl bg-[#0071e3] text-white text-sm font-medium hover:bg-[#0077ed] active:scale-[0.98] transition-all shadow-sm"
+        >
+          <Plus className="w-4 h-4" /> Add Customer
         </Link>
       </div>
 
-      <div className="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden">
+      <div className="bg-white rounded-2xl border border-[#d2d2d7]/40 shadow-sm overflow-hidden">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-slate-700">
-              <th className="text-left text-slate-400 text-xs font-medium uppercase tracking-wider px-6 py-3">Organization</th>
-              <th className="text-left text-slate-400 text-xs font-medium uppercase tracking-wider px-6 py-3">Plan</th>
-              <th className="text-left text-slate-400 text-xs font-medium uppercase tracking-wider px-6 py-3">Users</th>
-              <th className="text-left text-slate-400 text-xs font-medium uppercase tracking-wider px-6 py-3">Contacts</th>
-              <th className="text-left text-slate-400 text-xs font-medium uppercase tracking-wider px-6 py-3">Campaigns</th>
-              <th className="text-left text-slate-400 text-xs font-medium uppercase tracking-wider px-6 py-3">Status</th>
+            <tr className="border-b border-[#d2d2d7]/40">
+              <th className="text-left text-[#86868b] text-[11px] font-semibold uppercase tracking-wider px-6 py-3">Organization</th>
+              <th className="text-left text-[#86868b] text-[11px] font-semibold uppercase tracking-wider px-6 py-3">Plan</th>
+              <th className="text-left text-[#86868b] text-[11px] font-semibold uppercase tracking-wider px-6 py-3">Users</th>
+              <th className="text-left text-[#86868b] text-[11px] font-semibold uppercase tracking-wider px-6 py-3">Contacts</th>
+              <th className="text-left text-[#86868b] text-[11px] font-semibold uppercase tracking-wider px-6 py-3">Campaigns</th>
+              <th className="text-left text-[#86868b] text-[11px] font-semibold uppercase tracking-wider px-6 py-3">Status</th>
               <th className="px-6 py-3"></th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-700">
+          <tbody className="divide-y divide-[#d2d2d7]/30">
             {orgs.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-6 py-12 text-center">
-                  <Building2 className="w-8 h-8 text-slate-600 mx-auto mb-2" />
-                  <p className="text-slate-500">No customers yet. Add your first customer.</p>
+                <td colSpan={7} className="px-6 py-16 text-center">
+                  <Building2 className="w-8 h-8 text-[#d2d2d7] mx-auto mb-3" strokeWidth={1.5} />
+                  <p className="text-[#86868b] text-sm">No customers yet. Add your first customer.</p>
                 </td>
               </tr>
             ) : (
               orgs.map((org) => (
-                <tr key={org.id} className="hover:bg-slate-700/50 transition-colors">
+                <tr key={org.id} className="hover:bg-[#f5f5f7]/60 transition-colors">
                   <td className="px-6 py-4">
                     <div>
-                      <p className="text-white font-medium">{org.name}</p>
-                      <p className="text-slate-500 text-xs mt-0.5">{org.email || org.slug}</p>
+                      <p className="text-[#1d1d1f] font-medium text-sm">{org.name}</p>
+                      <p className="text-[#86868b] text-xs mt-0.5">{org.email || org.slug}</p>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="text-slate-300 text-sm capitalize">{org.plan}</span>
+                    <span className="text-[#424245] text-sm capitalize">{org.plan}</span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="text-slate-300 text-sm">{org._count.users}</span>
+                    <span className="text-[#424245] text-sm">{org._count.users}</span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="text-slate-300 text-sm">{org._count.contacts}</span>
+                    <span className="text-[#424245] text-sm">{org._count.contacts}</span>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="text-slate-300 text-sm">{org._count.campaigns}</span>
+                    <span className="text-[#424245] text-sm">{org._count.campaigns}</span>
                   </td>
                   <td className="px-6 py-4">
-                    <Badge
-                      variant={org.isActive ? "default" : "secondary"}
-                      className={org.isActive ? "bg-green-400/10 text-green-400 hover:bg-green-400/20" : ""}
-                    >
+                    <span className={`text-[11px] font-medium px-2.5 py-1 rounded-full ${org.isActive ? "bg-[#34c759]/10 text-[#248a3d]" : "bg-red-50 text-red-600"}`}>
                       {org.isActive ? "Active" : "Inactive"}
-                    </Badge>
+                    </span>
                   </td>
                   <td className="px-6 py-4 text-right">
-                    <Link href={`/admin/customers/${org.id}`}>
-                      <Button variant="ghost" size="sm" className="text-slate-400 hover:text-white">
-                        View
-                      </Button>
+                    <Link href={`/admin/customers/${org.id}`} className="text-[#0071e3] text-sm font-medium hover:underline">
+                      View
                     </Link>
                   </td>
                 </tr>
