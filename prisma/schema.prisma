@@ -1,0 +1,224 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ORG_ADMIN
+  ORG_USER
+}
+
+enum CampaignStatus {
+  DRAFT
+  SCHEDULED
+  SENDING
+  SENT
+  PAUSED
+  CANCELLED
+}
+
+enum ContactStatus {
+  ACTIVE
+  UNSUBSCRIBED
+  BOUNCED
+  COMPLAINED
+}
+
+enum EmailEventType {
+  DELIVERED
+  OPENED
+  CLICKED
+  BOUNCED
+  COMPLAINED
+  UNSUBSCRIBED
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model User {
+  id             String    @id @default(cuid())
+  name           String?
+  email          String    @unique
+  emailVerified  DateTime?
+  image          String?
+  passwordHash   String?
+  role           UserRole  @default(ORG_USER)
+  organizationId String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  isActive       Boolean   @default(true)
+
+  organization Organization? @relation(fields: [organizationId], references: [id])
+  accounts     Account[]
+  sessions     Session[]
+  campaigns    Campaign[]    @relation("CampaignCreatedBy")
+  auditLogs    AuditLog[]
+}
+
+model Organization {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  email       String?
+  phone       String?
+  website     String?
+  industry    String?
+  plan        String   @default("starter")
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users     User[]
+  contacts  Contact[]
+  campaigns Campaign[]
+  lists     ContactList[]
+}
+
+model Contact {
+  id             String        @id @default(cuid())
+  email          String
+  firstName      String?
+  lastName       String?
+  phone          String?
+  company        String?
+  jobTitle       String?
+  status         ContactStatus @default(ACTIVE)
+  organizationId String
+  customFields   Json?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  organization Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  listMembers  ContactListMember[]
+  emailEvents  EmailEvent[]
+
+  @@unique([email, organizationId])
+}
+
+model ContactList {
+  id             String   @id @default(cuid())
+  name           String
+  description    String?
+  organizationId String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  members      ContactListMember[]
+  campaigns    Campaign[]
+}
+
+model ContactListMember {
+  id        String   @id @default(cuid())
+  listId    String
+  contactId String
+  addedAt   DateTime @default(now())
+
+  list    ContactList @relation(fields: [listId], references: [id], onDelete: Cascade)
+  contact Contact     @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  @@unique([listId, contactId])
+}
+
+model Campaign {
+  id             String         @id @default(cuid())
+  name           String
+  subject        String
+  previewText    String?
+  fromName       String
+  fromEmail      String
+  replyTo        String?
+  htmlContent    String         @db.Text
+  textContent    String?        @db.Text
+  status         CampaignStatus @default(DRAFT)
+  scheduledAt    DateTime?
+  sentAt         DateTime?
+  organizationId String
+  listId         String?
+  createdById    String
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  organization Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  list         ContactList?  @relation(fields: [listId], references: [id])
+  createdBy    User          @relation("CampaignCreatedBy", fields: [createdById], references: [id])
+  emailEvents  EmailEvent[]
+  stats        CampaignStats?
+}
+
+model CampaignStats {
+  id           String   @id @default(cuid())
+  campaignId   String   @unique
+  totalSent    Int      @default(0)
+  delivered    Int      @default(0)
+  opened       Int      @default(0)
+  clicked      Int      @default(0)
+  bounced      Int      @default(0)
+  complained   Int      @default(0)
+  unsubscribed Int      @default(0)
+  updatedAt    DateTime @updatedAt
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+}
+
+model EmailEvent {
+  id         String         @id @default(cuid())
+  campaignId String
+  contactId  String
+  eventType  EmailEventType
+  metadata   Json?
+  occurredAt DateTime       @default(now())
+
+  campaign Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  contact  Contact  @relation(fields: [contactId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  action     String
+  resource   String
+  resourceId String?
+  metadata   Json?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+}
