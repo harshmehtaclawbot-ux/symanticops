@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import Image from "next/image";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -36,9 +37,7 @@ export default function RegisterPage() {
     <div className="min-h-screen bg-[#f5f5f7] flex items-center justify-center p-4">
       <div className="w-full max-w-sm space-y-8">
         <div className="flex flex-col items-center gap-3">
-          <span className="text-[28px] font-semibold tracking-tight text-[#1d1d1f]">
-            SymanticOps
-          </span>
+          <Image src="/logo.png" alt="SymanticOps" width={180} height={45} className="h-10 w-auto" priority />
           <p className="text-[#86868b] text-sm font-normal">CRM · HRMS · Marketing Platform</p>
         </div>
 

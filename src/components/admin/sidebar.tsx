@@ -13,6 +13,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
+import Image from "next/image";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
@@ -33,7 +34,7 @@ export function AdminSidebar() {
     <aside className="w-[260px] min-h-screen bg-white/80 backdrop-blur-xl border-r border-[#d2d2d7]/50 flex flex-col">
       <div className="px-6 py-5 border-b border-[#d2d2d7]/50">
         <Link href="/admin" className="flex items-center gap-2.5">
-          <span className="text-[17px] font-semibold tracking-tight text-[#1d1d1f]">SymanticOps</span>
+          <Image src="/logo.png" alt="SymanticOps" width={130} height={32} className="h-7 w-auto" />
           <span className="text-[10px] font-semibold text-[#0071e3] bg-[#0071e3]/8 px-2 py-0.5 rounded-full uppercase tracking-wide">Admin</span>
         </Link>
       </div>

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard, Users, Mail, BarChart3, Settings, LogOut, List } from "lucide-react";
 import { signOut } from "next-auth/react";
+import Image from "next/image";
 
 const navItems = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard, exact: true },
@@ -24,9 +25,9 @@ export function DashboardSidebar({ orgName }: { orgName: string }) {
   return (
     <aside className="w-[260px] min-h-screen bg-white/80 backdrop-blur-xl border-r border-[#d2d2d7]/50 flex flex-col">
       <div className="px-6 py-5 border-b border-[#d2d2d7]/50">
-        <div className="min-w-0">
-          <p className="font-semibold text-[15px] text-[#1d1d1f] leading-tight truncate">{orgName}</p>
-          <p className="text-[#86868b] text-[11px] mt-0.5">SymanticOps</p>
+        <div className="min-w-0 space-y-1.5">
+          <Image src="/logo.png" alt="SymanticOps" width={120} height={30} className="h-6 w-auto" />
+          <p className="font-medium text-[13px] text-[#424245] leading-tight truncate">{orgName}</p>
         </div>
       </div>
 
